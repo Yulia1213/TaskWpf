@@ -1,0 +1,63 @@
+﻿<Window x:Class="TaskWpf.ShowProcess"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TaskWpf"
+         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+
+        mc:Ignorable="d"
+        Title="ShowProcess" Height="450" Width="800">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction  Command="{Binding CloseWindow}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <ScrollViewer>
+    <Grid ShowGridLines="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition ></ColumnDefinition>
+            <ColumnDefinition ></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        
+            <StackPanel Grid.Column="0" Grid.Row="0">
+            <TextBlock TextWrapping="Wrap">
+               <Run FontSize="20" Foreground="Red" FontWeight="Bold">Потоків </Run>
+               <Run FontSize="20" Foreground="Red" Text="{Binding Details.StreamCount, Mode=OneWay}"/>
+            </TextBlock>
+            <DataGrid    x:Name="threadGrid" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray" 
+                         RowBackground="LightGray" AlternatingRowBackground="White" DataContext="{Binding Details}"  ItemsSource="{Binding Streams}"
+                           SelectedItem="{Binding Path=SelectedStream, Mode=TwoWay}"
+                         ScrollViewer.CanContentScroll="True" 
+      ScrollViewer.VerticalScrollBarVisibility="Auto"
+      ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID " Binding="{Binding Path=Id , UpdateSourceTrigger=PropertyChanged}" Width="50" />
+                        <DataGridHyperlinkColumn Header="Стан" Binding="{Binding Path=State , UpdateSourceTrigger=PropertyChanged}"  Width="120" />
+                        <DataGridHyperlinkColumn  Header="Час запуску"  Binding="{Binding Path=StartTime , UpdateSourceTrigger=PropertyChanged}"  Width="200" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Grid.Row="0">
+            <TextBlock TextWrapping="Wrap">
+               <Run FontSize="20" Foreground="Red" FontWeight="Bold">Модулі </Run></TextBlock>
+            <DataGrid  x:Name="moduleGrid" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray"
+                  RowBackground="LightGray" AlternatingRowBackground="White"   DataContext="{Binding Details}"  ItemsSource="{Binding Modules}" 
+                       SelectedItem="{Binding Path=SelectedModule, Mode=TwoWay}"
+                       ScrollViewer.CanContentScroll="True" 
+      ScrollViewer.VerticalScrollBarVisibility="Auto"
+      ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                    <DataGrid.Columns>
+                        <DataGridHyperlinkColumn Header="І`мя модулю" Binding="{Binding Path=ModuleName , UpdateSourceTrigger=PropertyChanged}" Width="100" />
+                        <DataGridHyperlinkColumn Header="Шлях" Binding="{Binding Path=ModuleFile , UpdateSourceTrigger=PropertyChanged}"  Width="*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+        
+    </Grid>
+    </ScrollViewer>
+</Window>

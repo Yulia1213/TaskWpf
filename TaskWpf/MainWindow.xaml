@@ -1,0 +1,135 @@
+﻿<Window x:Class="TaskWpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TaskWpf"
+         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <DockPanel x:Name="MainDock" HorizontalAlignment="Left" Height="Auto" LastChildFill="False" VerticalAlignment="Top" Width="Auto">
+            <DataGrid x:Name="ProcessGrid" Height="Auto" VerticalAlignment="Top" Width="auto"
+                      CanUserSortColumns="True"
+                      AutoGenerateColumns="False"
+                      Sorting="ProcessGrid_Sorting"
+                       SelectionUnit="FullRow"
+                       SelectionMode="Single"
+                       SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}"
+              ItemsSource="{Binding Path=ProcessRepository.ProcessEntitiesCollection,
+        Mode=OneWay, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True }" >
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDoubleClick"  >
+                        <i:InvokeCommandAction Command="{Binding ProcessParametersChangeCommand}" CommandParameter="{Binding SelectedItem}" />
+                    </i:EventTrigger>
+                   
+                </i:Interaction.Triggers>
+                <DataGrid.Resources>
+                    <Style TargetType="{x:Type DataGridCell}">
+                        <Style.Triggers>
+                            <Trigger Property="DataGridCell.IsSelected" Value="True">
+                                <Setter Property="Background" Value="#00FFFF" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID " Binding="{Binding Path=Process.Id}" Width="50" />
+                    <DataGridTemplateColumn
+                         Header="Процес" IsReadOnly="True" Width="150" CanUserResize="False" CanUserSort="True" SortMemberPath="Process.ProcessName">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <!-- Процесс -->
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Width="32" Height="16" Source="{Binding Path=IconSource}"/>
+                                    <TextBlock Text="{Binding Path=Process.ProcessName}" TextAlignment="Center" />
+                                </StackPanel>
+
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+            Header="Aктивний" IsReadOnly="True" Width="70" CanUserResize="False" SortMemberPath="Process.Responding">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsHitTestVisible="False" Focusable="False" IsChecked="{Binding Path=Process.Responding , Mode=OneWay}" HorizontalAlignment="Center" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+            Header="Опис файлу" IsReadOnly="True" Width="150" CanUserResize="True" SortMemberPath="Process.MainModule.FileVersionInfo.FileDescription">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <!-- Описание файла -->
+                            <DataTemplate>
+                                <TextBlock TextAlignment="Left"
+                            Text="{Binding Path=Process.MainModule.FileVersionInfo.FileDescription}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+            Header="Процесор,%" IsReadOnly="True" Width="100" CanUserResize="False" SortMemberPath="CpuLoadPercentage">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <!-- CPU -->
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=CpuLoadPercentage}" TextAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+            Header="Пам'ять,МБ" IsReadOnly="True" Width="100" CanUserResize="False" SortMemberPath="MemoryMBytesUsage">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <!-- RAM -->
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=MemoryMBytesUsage}" TextAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+            Header="Пам'ять,%" IsReadOnly="True" Width="100" CanUserResize="False" SortMemberPath="MemoryProcent">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <!-- RAM% -->
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=MemoryProcent}" TextAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+            Header="Власник" IsReadOnly="True" Width="100" CanUserResize="True" SortMemberPath="UserName">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=UserName}" TextAlignment="Left"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+            Header="Шлях" IsReadOnly="True"  CanUserResize="True" SortMemberPath="FileName" Width="200">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=FileName}" TextAlignment="Left"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+            Header="Запущено" IsReadOnly="True"  CanUserResize="True" SortMemberPath="StartTime" Width="200">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=StartTime}" TextAlignment="Left"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Відкрити директорію" Command="{Binding ProcessDirCommand}" CommandParameter="{Binding SelectedItem}">
+                        </MenuItem>
+                        <MenuItem Header="Завершити процес"  Command="{Binding ProcessDelCommand}" CommandParameter="{Binding SelectedItem}"> 
+                        </MenuItem>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+            </DataGrid>
+           
+        </DockPanel>
+
+    </Grid>
+</Window>
