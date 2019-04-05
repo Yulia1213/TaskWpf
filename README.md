@@ -1,6 +1,6 @@
 # TaskWpf
-Обов'язково відзначити розширення зазначені нижче
-system.windows.interactivity
-пакет SDK графічних інструментів для windows
-пакет SDK microsoft blend для .NET
-інструменти entity framework 6
+Обов'язково відзначити розширення зазначені нижче ------------------------------------------------------------
+1. system.windows.interactivity
+2. пакет SDK графічних інструментів для windows
+3. пакет SDK microsoft blend для .NET
+4. інструменти entity framework 6
